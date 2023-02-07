@@ -1,20 +1,25 @@
 import type { NextPage } from 'next';
 import { useState } from 'react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const Portal: NextPage = () => {
-  const [first, setFirst] = useState('');
-  const [last, setLast] = useState('');
+  const [fullName, setfullName] = useState('');
+  const [adharNumber, setadharNumber] = useState('');
+  const [note, setNote] =useState('')
   const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append('first', first);
-    formData.append('last', last);
+    formData.append('fullName', fullName);
+    formData.append('adharNumber', adharNumber);
+    formData.append('note',note)
 
     if (file) {
       formData.append('file', file);
     }
+    console.log(formData)
     const options = {
       method: 'POST',
       body: formData,
@@ -22,26 +27,32 @@ const Portal: NextPage = () => {
     const response = await fetch('/api/portal', options);
   };
   return (
+    <div>
+        <Navbar/>
     <form onSubmit={handleSubmit}>
-      <label htmlFor='first'>First Name</label>
+      <label htmlFor='fullName'>Full name:</label>
       <input
-        onChange={(e) => setFirst(e.target.value)}
+        onChange={(e) => setfullName(e.target.value)}
         type='text'
-        id='first'
-        name='first'
+        id='fullName'
+        name='fullName'
         required
       />
 
-      <label htmlFor='last'>Last Name</label>
+      <label htmlFor='adharNumber'>Adhar number:</label>
       <input
-        onChange={(e) => setLast(e.target.value)}
+        onChange={(e) => setadharNumber(e.target.value)}
         type='text'
-        id='last'
-        name='last'
+        id='adharNumber'
+        name='adharNumber'
+        pattern="[0-9]{12}"
+        title="Adhar nunber should be digits (0 to 9) only upto 12 digits"
         required
       />
+    <label htmlFor='note'>Note:</label>
+    <textarea onChange={(e) => setNote(e.target.value)} name='note' id='note' />
 
-      <input
+      <input    
         onChange={(e) => {
           if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
@@ -53,6 +64,8 @@ const Portal: NextPage = () => {
       />
       <button type='submit'>Submit</button>
     </form>
+    <Footer/>
+    </div>
   );
 };
 export default Portal;
