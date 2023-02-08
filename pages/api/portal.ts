@@ -40,6 +40,7 @@ export default async function handler(req: any, res: any) {
         await createListing(client,{
           name: fields.fullName,
           adharNumber: fields.adharNumber,
+          doctorId: fields.doctorId,
           fileName: `/uploads/${telName}`
       })
         res.json({ status: 200 });
